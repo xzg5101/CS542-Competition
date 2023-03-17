@@ -26,3 +26,8 @@ model = AutoModel.from_pretrained("gpt2")
 training_args = TrainingArguments(output_dir="test_trainer")
 
 metric = evaluate.load("accuracy")
+
+def compute_metrics(eval_pred):
+    logits, labels = eval_pred
+    predictions = np.argmax(logits, axis=-1)
+    return metric.compute(predictions=predictions, references=labels)

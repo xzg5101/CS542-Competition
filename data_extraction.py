@@ -12,11 +12,13 @@ for question in autocast_questions:
         continue
     if question['answer'] is None: # skipping questions without answer
         continue
+
+    # convert all useful training data fields into strings
     train_questions.append(
         {
             'id':str(question['id']),
             'question':str(question['question']),
-            'label': str(question['answer']),
+            'label': str(question['answer']),           # the label
             'answer':str(question['answer']),
             'background': str(question['background']),
             'publish_time':str(question['publish_time']),
