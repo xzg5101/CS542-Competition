@@ -2,7 +2,7 @@ import json
 from transformers import AutoTokenizer, pipeline
 #from datasets import load_dataset
 
-
+# import training data
 train_questions = json.load(open('training.json', encoding='utf-8')) # from the Autocast dataset
 
 # use first one as example
