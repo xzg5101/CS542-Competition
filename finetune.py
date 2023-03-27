@@ -7,19 +7,19 @@ import evaluate
 # transformer pipeline
 #tg = pipeline("text-generation", model = 'gpt2')
 
-dataset = load_dataset("json", data_files="training.json")
-print(dataset)
+train_dataset = load_dataset("json", data_files="datasets/training.json")
+test_dataset = load_dataset("json", data_files="datasets/testing.json")
 
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 tokenizer.pad_token = tokenizer.eos_token
+
 def tokenize_function(examples):
     return tokenizer(examples["question"], padding="max_length", truncation=True, )
 
 #tokenizer = AutoTokenizer.from_pretrained("gpt2")
 #dataset.to_json("./myset.csv")
-tokenized_datasets = dataset.map(tokenize_function, batched=True)
-small_train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(1000))
-small_eval_dataset = tokenized_datasets["test"].shuffle(seed=42).select(range(1000))
+tokenized_train_datasets = train_dataset.map(tokenize_function, batched=True)
+tokenized_test_datasets = test_dataset.map(tokenize_function, batched=True)
 #print(tokenized_datasets)
 
 model = AutoModel.from_pretrained("gpt2")
@@ -38,8 +38,8 @@ training_args = TrainingArguments(output_dir="test_trainer", evaluation_strategy
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=small_train_dataset,
-    eval_dataset=small_eval_dataset,
+    train_dataset=tokenized_train_datasets,
+    eval_dataset=tokenized_test_datasets,
     compute_metrics=compute_metrics,
 )
 
