@@ -1,8 +1,9 @@
 # CS542-Competition
 
-Environment:
+Before first execution:
 ```
 conda create -n cs542 -c conda-forge -c huggingface scikit-learn numpy transformers datasets
+pip install evaluate
 ```
 
 Before every execution:
