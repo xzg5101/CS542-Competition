@@ -12,3 +12,16 @@ Before every execution:
 ```
 conda activate cs542
 ```
+
+To download data in project directory:
+```
+gdown download 16TI8uVk3No1HCx765PrSWLDMmnnqmqec
+gdown download 1RDgFbMApfv8lkXi7PVeBoqkHK9xwItxs
+```
+
+To finetune a model with boolean answers only:
+```
+python bool_extraction.py
+
+python run_lm_finetuning.py --output_dir=output --model_type=gpt2  --model_name_or_path=gpt2  --do_train --train_data_file=datasets/bool_training.json --do_eval --eval_data_file=datasets/bool_testing.json --per_gpu_eval_batch_size 2 --per_gpu_train_batch_size 2
+```
