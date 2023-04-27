@@ -28,14 +28,10 @@ for question in autocast_questions:
     if question['answer'] is None: # skipping questions without answer
         continue
 
-    if is_float(question['answer']):
-        label = str(question['answer'])
-    elif is_letter(question['answer']):
-        label = str(letters.index(question['answer']))
-    elif question['answer'] in bool_labels:
-        label = str(bool_labels.index(question['answer']))
+    if question['answer'] in bool_labels:
+        label = bool_labels.index(question['answer'])
     else:
-        print('unknown label', question['answer'])
+        continue
 
     q_obj = {
                 'id':str(question['id']),
@@ -65,36 +61,18 @@ dataset = {
     'train': train_questions
 }
 
-converted_labels = []
 
-for i in labels:
-    if is_float(i):
-        converted_labels.append(i)
-    elif is_letter(i):
-        converted_labels.append(str(letters.index(i)))
-    elif i in bool_labels:
-        converted_labels.append(str(bool_labels.index(i)))
-    else:
-        print('unknown label', i)
 
 # Serializing json
 train_object = json.dumps(train_questions, indent=4)
 test_object = json.dumps(test_questions, indent=4)
 data_object = json.dumps(dataset, indent=4)
-label_object = json.dumps(list(labels), indent=4)
-clabel_object = json.dumps(list(converted_labels), indent=4)
 # Writing to json
-with open("datasets/training.json", "w") as outfile:
+with open("datasets/bool_training.json", "w") as outfile:
     outfile.write(train_object)
 
-with open("datasets/testing.json", "w") as outfile:
+with open("datasets/bool_testing.json", "w") as outfile:
     outfile.write(train_object)
 
-with open("datasets/dataset.json", "w") as outfile:
+with open("datasets/bool_dataset.json", "w") as outfile:
     outfile.write(data_object)
-
-with open("datasets/labels.json", "w") as outfile:
-    outfile.write(label_object)
-
-with open("datasets/converted_labels.json", "w") as outfile:
-    outfile.write(clabel_object)

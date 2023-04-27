@@ -7,10 +7,7 @@ import evaluate
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 model = AutoModel.from_pretrained("gpt2")
 metric = evaluate.load("accuracy")
-labels = ClassLabel(names_file='datasets/labels.json')
-clabels = ClassLabel(names_file='datasets/converted_labels.json')
 
-print(labels)
 
 def tokenize_function(data):
     return tokenizer(data["question"], padding="max_length", truncation=True, )
@@ -18,9 +15,7 @@ def tokenize_function(data):
 # Find a way to tokenize the labels
 # the labels are strings
 def tokenize(batch):
-    tokenized_batch = tokenizer(batch['question'], padding=True, truncation=True, max_length=128)
-    #tokenized_batch['label'] = labels.str2int(batch['label'])
-    tokenized_batch['label'] = clabels.str2int(batch['label'])
+    tokenized_batch = tokenizer(batch['question'], padding='max_length', truncation=True, max_length=128)
     return tokenized_batch
 
 
@@ -30,7 +25,7 @@ def compute_metrics(eval_pred):
     return metric.compute(predictions=predictions, references=labels)
 
 
-data_files={'train': 'datasets/training.json', 'test': 'datasets/testing.json'}
+data_files={'train': 'datasets/bool_training.json', 'test': 'datasets/bool_testing.json'}
 dataset = load_dataset("json", data_files=data_files)
 
 
@@ -38,8 +33,8 @@ dataset = load_dataset("json", data_files=data_files)
 tokenizer.pad_token = tokenizer.eos_token
 tokenized_datasets = dataset.map(tokenize, batched=True)
 
-small_train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(500))
-small_eval_dataset = tokenized_datasets["test"].shuffle(seed=42).select(range(500))
+small_train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(400))
+small_eval_dataset = tokenized_datasets["test"].shuffle(seed=42).select(range(400))
 
 
 training_args = TrainingArguments(output_dir="test_trainer", evaluation_strategy="epoch")
