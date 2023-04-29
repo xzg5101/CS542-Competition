@@ -57,10 +57,10 @@ def ft_pred(device, tokenizer, model, length, question):
     
     gen_text = text.replace(prompt_text, '').strip()
     gen_text = gen_text.replace('\n', '')
-    print("\ngenerated text:", gen_text)
-    print("\ngenerated prefix:", gen_text[0:2])
-    gen_ans = 'yes' if gen_text[0:2] == 'yes' else 'no'
-    print("generated answer:", gen_ans)
+    print("\ngenerated text\t:", gen_text)
+    print("\ngenerated prefix\t:", gen_text[0:3])
+    gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
+    print("generated answer\t:", gen_ans)
     return text
 
 def ft_model(question):
