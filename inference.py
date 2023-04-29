@@ -98,19 +98,23 @@ device, tokenizer, model, length = ft_init()
 preds = []
 answers = []
 qtypes = []
-for question in autocast_questions[0:10]:
+for question in autocast_questions:
     if question['id'] in test_ids: # skipping questions in the competition test set
         continue
     if question['answer'] is None: # skipping questions without answer
         continue
 
-    preds.append(calibrated_random_baseline_model(question))
     if question['qtype'] == 't/f':
         ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
+        preds.append(ft_prob)
+    else:
+        preds.append(calibrated_random_baseline_model(question))
+    if question['qtype'] == 't/f':
+        '''ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
         print("\nrand ans:", calibrated_random_baseline_model(question))
         print("ft_ans:", ft_ans)
         print("ft_prob:", ft_prob)
-        print("true ans:", question["answer"])
+        print("true ans:", question["answer"])'''
         ans_idx = 0 if question['answer'] == 'no' else 1
         ans = np.zeros(len(question['choices']))
         ans[ans_idx] = 1
