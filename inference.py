@@ -55,13 +55,9 @@ def ft_pred(device, tokenizer, model, length, question):
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
-    gen_text = text.replace(prompt_text, '').strip()
-    gen_text = gen_text.replace('\n', '')
-    print("\ngenerated text\t:", gen_text)
-    print("\ngenerated prefix\t:", gen_text[0:3])
+    gen_text = text.replace(prompt_text, '').strip().gen_text.replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
-    print("generated answer\t:", gen_ans)
-    return text
+    return gen_ans
 
 def ft_model(question):
     if question['qtype'] == 't/f':
@@ -109,8 +105,8 @@ for question in autocast_questions[0:10]:
 
     preds.append(calibrated_random_baseline_model(question))
     if question['qtype'] == 't/f':
-        ft_pred(device, tokenizer, model, length, question)
-        print("actual_answer:", question["answer"])
+        #ft_ans = ft_pred(device, tokenizer, model, length, question)
+        #print("actual_answer:", question["answer"])
         ans_idx = 0 if question['answer'] == 'no' else 1
         ans = np.zeros(len(question['choices']))
         ans[ans_idx] = 1
