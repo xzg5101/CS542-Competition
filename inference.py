@@ -106,6 +106,7 @@ for idx, question in enumerate(autocast_questions):
 
     print(f"{idx}/{len(autocast_questions)}")
     if question['qtype'] == 't/f':
+        print('ft result saved')
         ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
         preds.append(ft_prob)
     else:
