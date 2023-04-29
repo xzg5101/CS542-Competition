@@ -97,7 +97,7 @@ device, tokenizer, model, length = ft_init()
 preds = []
 answers = []
 qtypes = []
-for question in autocast_questions[0:10]:
+for question in autocast_questions:
     if question['id'] in test_ids: # skipping questions in the competition test set
         continue
     if question['answer'] is None: # skipping questions without answer
