@@ -55,7 +55,7 @@ def ft_pred(device, tokenizer, model, length, question):
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
-    gen_text = text.replace(prompt_text, '').strip().gen_text.replace('\n', '')
+    gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
     return gen_ans
 
