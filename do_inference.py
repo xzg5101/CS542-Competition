@@ -246,15 +246,12 @@ def main():
         if not q["qtype"] == "t/f":
             continue
         prompt_text = q["question"] + " The answer is"
-        print("\n", prompt_text)
+        print("\nprompt: ", prompt_text)
         text = infer(tokenizer, model, args, prompt_text)
+        
     return
 
-
 def infer(tokenizer, model, args, prompt_text):
-
-    
-
     # Different models need different input formatting and/or extra arguments
     requires_preprocessing = args.model_type in PREPROCESSING_FUNCTIONS.keys()
     if requires_preprocessing:
@@ -277,8 +274,8 @@ def infer(tokenizer, model, args, prompt_text):
     generated_sequence = output_sequences[0].tolist()
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     text = text[: text.find(args.stop_token) if args.stop_token else None]
-
-    print('generated text:', text)
+    gen_text = text.replace(prompt_text, '')
+    print('generated text: ', gen_text)
 
     return text
 
