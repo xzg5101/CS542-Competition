@@ -229,7 +229,7 @@ def main():
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     text = text[: text.find(args.stop_token) if args.stop_token else None]
 
-    print(text)
+    print('generated text:', text)
 
     return text
 
