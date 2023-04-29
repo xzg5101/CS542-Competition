@@ -221,6 +221,7 @@ def main():
         top_k=args.k,
         top_p=args.p,
         repetition_penalty=args.repetition_penalty,
+        pad_token_id = 50256,
     )
 
     # Batch size == 1. to add more examples please use num_return_sequences > 1
