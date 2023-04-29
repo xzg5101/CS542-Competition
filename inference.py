@@ -57,7 +57,7 @@ def ft_pred(device, tokenizer, model, length, question):
     
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
-    prob_ans = [1, 0] if gen_text[0:3] == 'yes' else [0, 1]
+    prob_ans = [0.0, 1.0] if gen_text[0:3] == 'yes' else [1.0, 0.0]
     return gen_ans, prob_ans
 
 def ft_model(question):
