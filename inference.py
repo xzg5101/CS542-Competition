@@ -5,7 +5,7 @@ from transformers import (
 )
 from transformers import pipeline
 
-model = GPT2LMHeadModel.from_pretrained('output')
+model = GPT2LMHeadModel.from_pretrained('./output/')
 
 generator = pipeline(model=model)
 
