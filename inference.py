@@ -99,7 +99,7 @@ preds = []
 answers = []
 qtypes = []
 for idx, question in enumerate(autocast_questions):
-    if question['id'] in test_ids: # skipping questions in the competition test set
+    if not question['id'] in test_ids: # skipping questions in the competition test set
         continue
     if question['answer'] is None: # skipping questions without answer
         continue
