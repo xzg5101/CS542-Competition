@@ -104,7 +104,7 @@ for idx, question in enumerate(autocast_questions):
     if question['answer'] is None: # skipping questions without answer
         continue
 
-    print(idx+' ', end='')
+    print(f"{idx}/{len(autocast_questions)}")
     if question['qtype'] == 't/f':
         ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
         preds.append(ft_prob)
