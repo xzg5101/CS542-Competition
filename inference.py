@@ -106,9 +106,11 @@ for idx, question in enumerate(autocast_questions):
 
     print(f"{idx}/{len(autocast_questions)}")
     if question['qtype'] == 't/f':
-        print('ft result saved')
+        
         ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
         preds.append(ft_prob)
+        print('ft result saved', ft_prob)
+        print("\nrand ans:", calibrated_random_baseline_model(question))
     else:
         preds.append(calibrated_random_baseline_model(question))
     if question['qtype'] == 't/f':
