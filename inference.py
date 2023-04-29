@@ -14,7 +14,7 @@ from transformers import (
 )
 
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 50
+LENGTH = 100
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
 test_questions = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
@@ -98,12 +98,13 @@ device, tokenizer, model, length = ft_init()
 preds = []
 answers = []
 qtypes = []
-for question in autocast_questions:
+for idx, question in enumerate(autocast_questions):
     if question['id'] in test_ids: # skipping questions in the competition test set
         continue
     if question['answer'] is None: # skipping questions without answer
         continue
 
+    print(idx+' ', end='')
     if question['qtype'] == 't/f':
         ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
         preds.append(ft_prob)
@@ -118,7 +119,7 @@ for question in autocast_questions:
         ans_idx = 0 if question['answer'] == 'no' else 1
         ans = np.zeros(len(question['choices']))
         ans[ans_idx] = 1
-        print("true prob:", ans)
+        #print("true prob:", ans)
         qtypes.append('t/f')
     elif question['qtype'] == 'mc':
         ans_idx = ord(question['answer']) - ord('A')
