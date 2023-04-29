@@ -58,7 +58,7 @@ def ft_pred(device, tokenizer, model, length, question):
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
     prob_ans = [1, 0] if gen_text[0:3] == 'yes' else [0, 1]
-    return prob_ans
+    return gen_ans, prob_ans
 
 def ft_model(question):
     if question['qtype'] == 't/f':
@@ -106,14 +106,15 @@ for question in autocast_questions[0:10]:
 
     preds.append(calibrated_random_baseline_model(question))
     if question['qtype'] == 't/f':
-        ft_ans = ft_pred(device, tokenizer, model, length, question)
-        print("\nrandom ans:", calibrated_random_baseline_model(question))
+        ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
+        print("\nrand ans:", calibrated_random_baseline_model(question))
         print("ft_ans:", ft_ans)
-        
+        print("ft_prob:", ft_prob)
+        print("true ans:", question["answer"])
         ans_idx = 0 if question['answer'] == 'no' else 1
         ans = np.zeros(len(question['choices']))
         ans[ans_idx] = 1
-        print("actual_answer:", ans)
+        print("true prob:", ans)
         qtypes.append('t/f')
     elif question['qtype'] == 'mc':
         ans_idx = ord(question['answer']) - ord('A')
