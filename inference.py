@@ -56,7 +56,7 @@ def ft_pred(device, tokenizer, model, length, question):
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
     gen_text = text.replace(prompt_text, '')
-    print('generated text:', gen_text)
+    print('\ngenerated text:', gen_text)
     return text
 
 def ft_model(question):
