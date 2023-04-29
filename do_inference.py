@@ -246,6 +246,7 @@ def main():
         if not q["qtype"] == "t/f":
             continue
         prompt_text = q["question"] + " The answer is"
+        print("\n", prompt_text)
         text = infer(tokenizer, model, args, prompt_text)
     return
 
