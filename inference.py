@@ -5,11 +5,7 @@ from transformers import (
 )
 from transformers import pipeline
 
-config_class, model_class, tokenizer_class = GPT2Config, GPT2LMHeadModel, GPT2Tokenizer
-
-model = model_class.from_pretrained("output")
-
-print(model._get_name())
+model = GPT2LMHeadModel.from_pretrained('output')
 
 generator = pipeline(model=model)
 
