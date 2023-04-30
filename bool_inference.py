@@ -50,6 +50,7 @@ def ft_pred(device, tokenizer, model, length, question):
         top_p = 0.9,
         repetition_penalty = 1.0,
         pad_token_id = 50256,
+        output_scores=True,
     )
 
 
