@@ -75,7 +75,7 @@ def ft_pred(device, tokenizer, model, length, question):
     pred = np.ones(2)
     pred[pred_idx] += 8
 
-    return gen_ans, prob_ans
+    return gen_ans, pred / pred.sum()
 
 def ft_model(question):
     if question['qtype'] == 't/f':
