@@ -94,52 +94,6 @@ device, tokenizer, model, length = ft_init()
 
 
 preds = []
-answers = []
-qtypes = []
-for idx, question in enumerate(autocast_questions):
-    if question['id'] in test_ids: # skipping questions in the competition test set
-        continue
-    if question['answer'] is None: # skipping questions without answer
-        continue
-
-    print(f"{idx}/{len(autocast_questions)}")
-    
-    if question['qtype'] == 't/f':
-        ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
-        preds.append(ft_prob)
-    else:
-        preds.append(calibrated_random_baseline_model(question))
-
-
-    if question['qtype'] == 't/f':
-        ans_idx = 0 if question['answer'] == 'no' else 1
-        ans = np.zeros(len(question['choices']))
-        ans[ans_idx] = 1
-        qtypes.append('t/f')
-    elif question['qtype'] == 'mc':
-        ans_idx = ord(question['answer']) - ord('A')
-        ans = np.zeros(len(question['choices']))
-        ans[ans_idx] = 1
-        qtypes.append('mc')
-    elif question['qtype'] == 'num':
-        ans = float(question['answer'])
-        qtypes.append('num')
-    answers.append(ans)
-
-
-tf_results, mc_results, num_results = [],[],[]
-for p, a, qtype in zip(preds, answers, qtypes):
-    if qtype == 't/f':
-        tf_results.append(brier_score(p, a))
-    elif qtype == 'mc':
-        mc_results.append(brier_score(p, a))
-    else:
-        num_results.append(np.abs(p - a))
-
-print(f"T/F: {np.mean(tf_results)*100:.2f}, MCQ: {np.mean(mc_results)*100:.2f}, NUM: {np.mean(num_results)*100:.2f}")
-print(f"Combined Metric: {(np.mean(tf_results) + np.mean(mc_results) + np.mean(num_results))*100:.2f}")
-
-preds = []
 for question in test_questions:
     preds.append(ft_model(question))
 
