@@ -40,7 +40,9 @@ def ft_init():
     return device, tokenizer, model, length
 
 def ft_pred(device, tokenizer, model, length, question):
-    prompt_text = question["question"] + " The correct choice is"
+    trimmed_choices = question['choices'][0:26]
+    choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(trimmed_choices)], trimmed_choices)]
+    prompt_text = question["question"] + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is"
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
     output_sequences = model.generate(
@@ -67,13 +69,13 @@ def ft_pred(device, tokenizer, model, length, question):
     else:
         print('---------unknown answer:', gen_text)
 
-    prob_ans = np.zeros([1, 26], dtype = np.float64)[0]
+    prob_ans = np.zeros([1, len(question['choices'])], dtype = np.float64)[0]
     prob_ans[letters.find(gen_ans)] = 1.
     print(prob_ans)
 
-    pred_idx = letters.find(gen_ans)
+    '''pred_idx = letters.find(gen_ans)
     pred = np.ones(26)
-    pred[pred_idx] += 8
+    pred[pred_idx] += 8'''
 
     return gen_ans, prob_ans
 

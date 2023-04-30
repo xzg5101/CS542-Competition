@@ -31,8 +31,8 @@ for question in autocast_questions:
     else:
         continue
 
-    question['choices'] = question['choices'][0:26]
-    choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(str(question['choices']))], question['choices'])]
+    trimmed_choices = question['choices'][0:26]
+    choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(trimmed_choices)], trimmed_choices)]
     q_obj = {
                 'id':str(question['id']),
                 'question':str(question['question']) + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is " + str(question['answer']) + ".",
