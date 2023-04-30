@@ -56,7 +56,7 @@ def ft_pred(device, tokenizer, model, length, question):
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
-    t_score = model.compute_transition_scores(text.sequences, text.scores, text.beam_indices, normalize_logits=False)
+    t_score = model.compute_transition_scores(output_sequences.sequences, output_sequences.scores, output_sequences.beam_indices, normalize_logits=False)
     print(t_score)
     
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
