@@ -65,7 +65,7 @@ def ft_pred(device, tokenizer, model, length, question):
     #t_score = model.compute_transition_scores(outputs.sequences, outputs.scores, outputs.beam_indices, normalize_logits=False)
     #print(t_score)
     
-    transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, outputs.beam_indices, normalize_logits=False)
+    transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     print(transition_scores)
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
