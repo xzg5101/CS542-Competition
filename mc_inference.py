@@ -69,7 +69,6 @@ def ft_pred(device, tokenizer, model, length, question):
 
     prob_ans = np.zeros([1, 26], dtype = np.float64)[0]
     prob_ans[letters.find(gen_ans)] = 1.
-    print("---------The answer is " + gen_ans)
     print(prob_ans)
 
     pred_idx = letters.find(gen_ans)
@@ -80,8 +79,10 @@ def ft_pred(device, tokenizer, model, length, question):
 
 def ft_model(question):
     if question['qtype'] == 't/f':
-        ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
-        return ft_prob
+        pred_idx = np.argmax(np.random.random(size=len(question['choices'])))
+        pred = np.ones(len(question['choices']))
+        pred[pred_idx] += 1e-5
+        return pred / pred.sum()
     elif question['qtype'] == 'mc':
         ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
         return ft_prob
