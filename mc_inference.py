@@ -13,6 +13,7 @@ from transformers import (
     GPT2Tokenizer,
 )
 
+mc_model_path = 'choice_fine_tuning'
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
 LENGTH = 100
 
@@ -33,8 +34,8 @@ def adjust_length_to_model(length, max_sequence_length):
 
 def ft_init():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tokenizer = GPT2Tokenizer.from_pretrained("output")
-    model = GPT2LMHeadModel.from_pretrained("output")
+    tokenizer = GPT2Tokenizer.from_pretrained(mc_model_path)
+    model = GPT2LMHeadModel.from_pretrained(mc_model_path)
     model.to(device)
     length = adjust_length_to_model(LENGTH, max_sequence_length=model.config.max_position_embeddings)
     return device, tokenizer, model, length
