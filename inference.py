@@ -57,15 +57,13 @@ def ft_pred(device, tokenizer, model, length, question):
     
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
-    prob_ans = [0.0, 1.0] if gen_text[0:3] == 'yes' else [1.0, 0.0]
+    prob_ans = np.array([0.0, 1.0]) if gen_text[0:3] == 'yes' else np.array([1.0, 0.0])
     return gen_ans, prob_ans
 
 def ft_model(question):
     if question['qtype'] == 't/f':
-        pred_idx = np.argmax(np.random.random(size=2))
-        pred = np.ones(2)
-        pred[pred_idx] += 1e-5
-        return pred / pred.sum()
+        ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
+        return ft_prob
     elif question['qtype'] == 'mc':
         pred_idx = np.argmax(np.random.random(size=len(question['choices'])))
         pred = np.ones(len(question['choices']))
@@ -99,30 +97,24 @@ preds = []
 answers = []
 qtypes = []
 for idx, question in enumerate(autocast_questions):
-    if not question['id'] in test_ids: # skipping questions in the competition test set
+    if question['id'] in test_ids: # skipping questions in the competition test set
         continue
     if question['answer'] is None: # skipping questions without answer
         continue
 
     print(f"{idx}/{len(autocast_questions)}")
+    
     if question['qtype'] == 't/f':
-        
         ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
         preds.append(ft_prob)
-        print('ft result saved', ft_prob)
-        print("\nrand ans:", calibrated_random_baseline_model(question))
     else:
         preds.append(calibrated_random_baseline_model(question))
+
+
     if question['qtype'] == 't/f':
-        '''ft_ans, ft_prob = ft_pred(device, tokenizer, model, length, question)
-        print("\nrand ans:", calibrated_random_baseline_model(question))
-        print("ft_ans:", ft_ans)
-        print("ft_prob:", ft_prob)
-        print("true ans:", question["answer"])'''
         ans_idx = 0 if question['answer'] == 'no' else 1
         ans = np.zeros(len(question['choices']))
         ans[ans_idx] = 1
-        #print("true prob:", ans)
         qtypes.append('t/f')
     elif question['qtype'] == 'mc':
         ans_idx = ord(question['answer']) - ord('A')
@@ -149,7 +141,7 @@ print(f"Combined Metric: {(np.mean(tf_results) + np.mean(mc_results) + np.mean(n
 
 preds = []
 for question in test_questions:
-    preds.append(calibrated_random_baseline_model(question))
+    preds.append(ft_model(question))
 
 if not os.path.exists('submission'):
     os.makedirs('submission')
