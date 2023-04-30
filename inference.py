@@ -54,10 +54,7 @@ def ft_pred(device, tokenizer, model, length, question):
     generated_sequence = output_sequences[0].tolist()
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
-    
-    t_score = model.compute_transition_scores(text.sequences, text.scores, text.beam_indices, normalize_logits=False)
-    print(t_score)
-    
+
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
 
