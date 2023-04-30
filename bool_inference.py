@@ -56,23 +56,19 @@ def ft_pred(device, tokenizer, model, length, question):
         return_dict_in_generate=True,
         output_scores=True,
     )
-    #print(outputs)
+
     output_seq = outputs.sequences
     generated_sequence = output_seq[0].tolist()
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
-    #text = text[: text.find(stop_token) if args.stop_token else None]
-    
-    #t_score = model.compute_transition_scores(outsputs.sequences, outputs.scores, outputs.beam_indices, normalize_logits=False)
-    #print(t_score)
+
     input_length = encoded_prompt.shape[1]
     transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     generated_tokens = outputs.sequences[:, input_length:]
     bool_token, bool_score = generated_tokens[0][0], transition_scores[0][0]
-    
     print(f"| {bool_token:5d} | {tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.2%}")
 
+    print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
 
-    print(transition_scores)
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
 
