@@ -55,6 +55,9 @@ def ft_pred(device, tokenizer, model, length, question):
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
+    t_score = model.compute_transition_scores(text.sequences, text.scores, text.beam_indices, normalize_logits=False)
+    print(t_score)
+    
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
 
@@ -70,7 +73,8 @@ def ft_pred(device, tokenizer, model, length, question):
     pred_idx = 1 if gen_text[0:3] == 'yes' else 0
     pred = np.ones(2)
     pred[pred_idx] += 8
-    return gen_ans, pred / pred.sum()
+
+    return gen_ans, prob_ans
 
 def ft_model(question):
     if question['qtype'] == 't/f':
@@ -106,7 +110,7 @@ device, tokenizer, model, length = ft_init()
 
 
 preds = []
-for idx, question in enumerate(test_questions):
+for idx, question in enumerate(test_questions[0:10]):
     print(f"{idx}/{len(test_questions)}")
     preds.append(ft_model(question))
 
