@@ -56,7 +56,7 @@ def ft_pred(device, tokenizer, model, length, question):
         return_dict_in_generate=True,
         output_scores=True,
     )
-    print(outputs)
+    #print(outputs)
     output_seq = outputs.sequences
     generated_sequence = output_seq[0].tolist()
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
