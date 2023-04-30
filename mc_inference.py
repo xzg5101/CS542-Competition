@@ -59,6 +59,7 @@ def ft_pred(device, tokenizer, model, length, question):
 
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     # gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
+    print("The output is " + gen_text)
     gen_ans = gen_text[0:1]
 
     if gen_text[0:1] in letters:
