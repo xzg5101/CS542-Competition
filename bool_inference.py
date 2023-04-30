@@ -62,14 +62,14 @@ def ft_pred(device, tokenizer, model, length, question):
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
-    #t_score = model.compute_transition_scores(outputs.sequences, outputs.scores, outputs.beam_indices, normalize_logits=False)
+    #t_score = model.compute_transition_scores(outsputs.sequences, outputs.scores, outputs.beam_indices, normalize_logits=False)
     #print(t_score)
     input_length = encoded_prompt.shape[1]
     transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     generated_tokens = outputs.sequences[:, input_length:]
-    for tok, score in zip(generated_tokens[0], transition_scores[0]):
-        # | token | token string | logits | probability
-        print(f"| {tok:5d} | {tokenizer.decode(tok):8s} | {score.numpy():.4f} | {np.exp(score.numpy()):.2%}")
+    bool_token, bool_score = zip(generated_tokens[0], transition_scores[0])[0]
+    
+    print(f"| {bool_token:5d} | {tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.2%}")
 
 
     print(transition_scores)
