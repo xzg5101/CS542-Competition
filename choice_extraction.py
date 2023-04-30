@@ -35,7 +35,7 @@ for question in autocast_questions:
     choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(str(question['choices']))], question['choices'])]
     q_obj = {
                 'id':str(question['id']),
-                'question':str(question['question']) + ". You have following choices: " + '\n'.join(choices_prompt) + ". The correct choice is " + str(question['answer']) + ".",
+                'question':str(question['question']) + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is " + str(question['answer']) + ".",
                 'label': label,           # the label
                 'answer':str(question['answer']),
                 'background': str(question['background']),
