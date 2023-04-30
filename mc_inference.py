@@ -40,7 +40,7 @@ def ft_init():
     return device, tokenizer, model, length
 
 def ft_pred(device, tokenizer, model, length, question):
-    prompt_text = question["question"] + " The answer is"
+    prompt_text = question["question"] + " The correct choice is"
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
     output_sequences = model.generate(
