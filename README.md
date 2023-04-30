@@ -18,8 +18,8 @@ conda activate cs542
 To download data in project directory (less than 1GB in total, install gdown before download):
 
 ```
-gdown download 16TI8uVk3No1HCx765PrSWLDMmnnqmqec
-gdown download 1RDgFbMApfv8lkXi7PVeBoqkHK9xwItxs
+gdown 16TI8uVk3No1HCx765PrSWLDMmnnqmqec
+gdown 1RDgFbMApfv8lkXi7PVeBoqkHK9xwItxs
 ```
 
 To finetune a model with boolean answers only:
