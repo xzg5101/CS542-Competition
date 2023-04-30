@@ -68,6 +68,7 @@ def ft_pred(device, tokenizer, model, length, question):
     #print(f"| {bool_token:5d} | {tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.2%}")
 
     print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
+    confident = np.exp(bool_score.numpy())
 
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
@@ -83,8 +84,8 @@ def ft_pred(device, tokenizer, model, length, question):
 
     pred_idx = 1 if gen_text[0:3] == 'yes' else 0
     pred = np.ones(2)
-    pred[pred_idx] += 8
-
+    pred[pred_idx] += confident
+    print(pred)
     return gen_ans, pred / pred.sum()
 
 def ft_model(question):
@@ -122,7 +123,7 @@ device, tokenizer, model, length = ft_init()
 
 preds = []
 for idx, question in enumerate(test_questions):
-    print(f"{idx}/{len(test_questions)}")
+    print(f"\n{idx}/{len(test_questions)}")
     preds.append(ft_model(question))
 
 if not os.path.exists('submission'):
