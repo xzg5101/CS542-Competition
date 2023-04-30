@@ -4,7 +4,6 @@ autocast_competition_test_set.json
 datasets
 output
 evaluation
-autocast_test_set_w_answers.csv
 submission
 evaluation.ipynb
 submission.zip
