@@ -15,7 +15,7 @@ from transformers import (
 
 mc_model_path = 'choice_fine_tuning'
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 100
+LENGTH = 200
 
 letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
