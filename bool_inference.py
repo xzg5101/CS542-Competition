@@ -111,7 +111,7 @@ device, tokenizer, model, length = ft_init()
 
 
 preds = []
-for idx, question in enumerate(test_questions[0:10]):
+for idx, question in enumerate(test_questions):
     print(f"{idx}/{len(test_questions)}")
     preds.append(ft_model(question))
 
