@@ -40,7 +40,7 @@ python run_lm_finetuning.py --output_dir=output --model_type=gpt2  --model_name_
 python inference.py
 ```
 
-Pack the output predictions.pkl in `submission.zip`, then put it in the same directory with the provided `evaluation.ipynb`, click "run all" or execute all code block in the notebook, the output will be:
+By excecuting the `inference.py`, the prediction will be put in `submission` direction. Pack the output predictions.pkl in `submission.zip`, then put it in the same directory with the provided `evaluation.ipynb`, click "run all" or execute all code blocks in the notebook, the output will be:
 
 ```
 T/F: 49.39, MCQ: 39.13, NUM: 23.28
