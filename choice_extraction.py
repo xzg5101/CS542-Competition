@@ -8,7 +8,7 @@ def is_float(string):
     except ValueError:
         return False
 
-letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 def is_letter(string):
     return len(string) == 1 and string in letters
@@ -26,15 +26,16 @@ for question in autocast_questions:
     if question['answer'] is None: # skipping questions without answer
         continue
 
-    if question['qtype'] == 'mc' or question['qtype'] == 't/f':
-        choices = question['choices']
-        label = choices.index(question['answer'])
+    if question['qtype'] == 'mc':
+        label = letters.find(question['answer'])
     else:
         continue
 
+    question['choices'] = question['choices'][0:26]
+    choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(str(question['choices']))], question['choices'])]
     q_obj = {
                 'id':str(question['id']),
-                'question':str(question['question']) + ". You have following choices: " + str(question['choices']) + ". The correct answer is " + str(question['answer']) + ".",
+                'question':str(question['question']) + ". You have following choices: " + '\n'.join(choices_prompt) + ". The correct answer is " + str(question['answer']) + ".",
                 'label': label,           # the label
                 'answer':str(question['answer']),
                 'background': str(question['background']),
