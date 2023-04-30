@@ -42,7 +42,7 @@ def ft_pred(device, tokenizer, model, length, question):
     prompt_text = question["question"] + " The answer is"
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
-    output_sequences = model.generate(
+    outputs = model.generate(
         input_ids = encoded_prompt,
         max_length = length,
         temperature = 1.0,
@@ -52,13 +52,16 @@ def ft_pred(device, tokenizer, model, length, question):
         pad_token_id = 50256,
     )
 
-    generated_sequence = output_sequences[0].tolist()
+
+    generated_sequence = outputs[0].tolist()
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
     #t_score = model.compute_transition_scores(output_sequences.sequences, output_sequences.scores, output_sequences.beam_indices, normalize_logits=False)
     #print(t_score)
     
+    transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, outputs.beam_indices, normalize_logits=False)
+    print(transition_scores)
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
 
