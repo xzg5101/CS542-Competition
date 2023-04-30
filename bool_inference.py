@@ -64,7 +64,7 @@ def ft_pred(device, tokenizer, model, length, question):
     
     #t_score = model.compute_transition_scores(outputs.sequences, outputs.scores, outputs.beam_indices, normalize_logits=False)
     #print(t_score)
-    input_length = encoded_prompt.input_ids.shape[1]
+    input_length = encoded_prompt.shape[1]
     transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     generated_tokens = outputs.sequences[:, input_length:]
     for tok, score in zip(generated_tokens[0], transition_scores[0]):
