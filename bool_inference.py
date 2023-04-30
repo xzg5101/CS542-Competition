@@ -53,12 +53,12 @@ def ft_pred(device, tokenizer, model, length, question):
         #max_new_tokens=5,
         #num_beams=4,
         #num_return_sequences=4,
-        #return_dict_in_generate=True,
+        return_dict_in_generate=True,
         output_scores=True,
     )
 
-
-    generated_sequence = outputs[0].tolist()
+    output_seq = outputs.to_tuple()
+    generated_sequence = output_seq[0].tolist()
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
     #text = text[: text.find(stop_token) if args.stop_token else None]
     
