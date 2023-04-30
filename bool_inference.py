@@ -49,7 +49,10 @@ def ft_pred(device, tokenizer, model, length, question):
         top_k = 0,
         top_p = 0.9,
         repetition_penalty = 1.0,
-        pad_token_id = 50256,
+        #pad_token_id = 50256,
+        max_new_tokens=5,
+        num_beams=4,
+        num_return_sequences=4,
         return_dict_in_generate=True,
         output_scores=True,
     )
