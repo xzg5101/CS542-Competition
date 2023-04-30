@@ -57,11 +57,19 @@ def ft_pred(device, tokenizer, model, length, question):
     
     gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
+
+    if gen_text[0:3] == 'yes':
+        gen_ans = 'yes'
+    elif gen_text[0:2] == 'no':
+        gen_ans = 'no'
+    else:
+        print('unknown answer:', gen_text)
+
     prob_ans = np.array([0.0, 1.0]) if gen_text[0:3] == 'yes' else np.array([1.0, 0.0])
 
     pred_idx = 1 if gen_text[0:3] == 'yes' else 0
     pred = np.ones(2)
-    pred[pred_idx] += 1e-5
+    pred[pred_idx] += 8
     return gen_ans, pred / pred.sum()
 
 def ft_model(question):
