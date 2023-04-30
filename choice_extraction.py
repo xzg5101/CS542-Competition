@@ -13,10 +13,6 @@ letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 def is_letter(string):
     return len(string) == 1 and string in letters
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 # import data
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
 test_set = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
@@ -38,11 +34,7 @@ for question in autocast_questions:
 
     q_obj = {
                 'id':str(question['id']),
-<<<<<<< Updated upstream
-                'question':str(question['question']),
-=======
                 'question':str(question['question']) + ". You have following choices: " + str(question['choices']) + ". The correct answer is " + str(question['answer']) + ".",
->>>>>>> Stashed changes
                 'label': label,           # the label
                 'answer':str(question['answer']),
                 'background': str(question['background']),
