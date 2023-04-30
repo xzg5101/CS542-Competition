@@ -35,7 +35,7 @@ for question in autocast_questions:
 
     q_obj = {
                 'id':str(question['id']),
-                'question':str(question['question']),
+                'question':str(question['question']) + " The answer is " + str(question['answer']),
                 'label': label,           # the label
                 'answer':str(question['answer']),
                 'background': str(question['background']),
