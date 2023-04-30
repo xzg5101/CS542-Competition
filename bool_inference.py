@@ -67,7 +67,7 @@ def ft_pred(device, tokenizer, model, length, question):
     input_length = encoded_prompt.shape[1]
     transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     generated_tokens = outputs.sequences[:, input_length:]
-    bool_token, bool_score = zip(generated_tokens[0], transition_scores[0])[0]
+    bool_token, bool_score = generated_tokens[0][0], transition_scores[0][0]
     
     print(f"| {bool_token:5d} | {tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.2%}")
 
