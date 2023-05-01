@@ -74,16 +74,17 @@ def ft_pred(device, tokenizer, model, length, question):
     print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
 
     #print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
-    confident = 0 #np.exp(first_score.numpy())
+    #confident = 0 #np.exp(first_score.numpy())
     gen_ans = 'no'
     meet_answer = False
-    for i, j in zip(generated_tokens[0], transition_scores[0]):
-        if tokenizer.decode(i) in ['yes', 'no', 'positive', 'negative']:
+    for tok, score in zip(generated_tokens[0], transition_scores[0]):
+        if tokenizer.decode(tok) in ['yes', 'no', 'positive', 'negative']:
             print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
-            print(f"|{tokenizer.decode(i):8s} | {j.numpy():.4f} | {np.exp(j.numpy()):.4f}")
-            confident = np.exp(j.numpy())
-            gen_ans = tokenizer.decode(i)
-            print(f"answer: {gen_ans:8s} | {confident:.4f}")
+            print(f"|{tokenizer.decode(tok):8s} | {score.numpy():.4f} | {np.exp(score.numpy()):.4f}")
+            
+            confident = np.exp(score.numpy())
+            gen_ans = tokenizer.decode(tok)
+            print(f"answer: {tokenizer.decode(tok):8s} | {np.exp(score.numpy()):.4f}")
             meet_answer = True
             break
     if gen_ans in ['yes', 'positive']:
