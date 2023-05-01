@@ -32,7 +32,9 @@ for question in autocast_questions:
         label = bool_labels.index(question['answer'])
     else:
         continue
-    tags = "This question is about " + " ". join(question['tags']) + '. '
+    tags = ''
+    if len(question['tags']) > 0:
+        tags = "This question is about " + ", ". join(question['tags']) + '. '
     bg = str(question['background']).split('(http')[0].rstrip() + '. '
 
     q_obj = {
