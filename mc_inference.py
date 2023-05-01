@@ -41,19 +41,35 @@ def ft_init():
     return device, tokenizer, model, length
 
 def ft_pred(device, tokenizer, model, length, question):
+    tags = ''
+    if len(question['tags']) > 0:
+        tags = "This question is about " + ", ". join(question['tags']) + '. '
+    bg = str(question['background']).split('(http')[0].rstrip() + '. '
     trimmed_choices = question['choices'][0:26]
     choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(trimmed_choices)], trimmed_choices)]
-    prompt_text = question["question"] + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is"
+    prompt_text = tags + bg + question["question"] + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is"
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
     output_sequences = model.generate(
+        # input_ids = encoded_prompt,
+        # max_length = length,
+        # temperature = 1.0,
+        # top_k = 0,
+        # top_p = 0.9,
+        # repetition_penalty = 1.0,
+        # pad_token_id = 50256,
         input_ids = encoded_prompt,
         max_length = length,
-        temperature = 1.0,
-        top_k = 0,
-        top_p = 0.9,
-        repetition_penalty = 1.0,
+        #temperature = 1.0,
+        #top_k = 0,
+        #top_p = 0.9,
+        #repetition_penalty = 1.0,
         pad_token_id = 50256,
+        #max_new_tokens=5,
+        #num_beams=4,
+        #num_return_sequences=4,
+        return_dict_in_generate=True,
+        output_scores=True,
     )
 
     generated_sequence = output_sequences[0].tolist()
