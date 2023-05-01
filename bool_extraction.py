@@ -32,10 +32,12 @@ for question in autocast_questions:
         label = bool_labels.index(question['answer'])
     else:
         continue
+    tags = "This question is about " + " ". join(question['tags']) + '. '
+    bg = str(question['background']).split('(http')[0].rstrip() + '. '
 
     q_obj = {
                 'id':str(question['id']),
-                'question':str(question['question']) + " The correct answer is " + str(question['answer']),
+                'question':tags + bg + str(question['question']) + " The correct answer is " + str(question['answer']),
                 'label': label,           # the label
                 'answer':str(question['answer']),
                 'background': str(question['background']).split('(http')[0].rstrip() + '.',
@@ -50,7 +52,7 @@ for question in autocast_questions:
         n_ans = 'yes'
     q_n_obj = {
                 'id':str(question['id']),
-                'question':str(question['question']) + " The wrong answer is " + n_ans,
+                'question':tags + bg + str(question['question']) + " The wrong answer is "  + n_ans,
                 'label': 0 if label == 1 else 1,           # the label
                 'answer':n_ans,
                 'background': str(question['background']).split('(http')[0].rstrip() + '.',
