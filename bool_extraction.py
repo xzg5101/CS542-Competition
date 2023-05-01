@@ -35,21 +35,37 @@ for question in autocast_questions:
 
     q_obj = {
                 'id':str(question['id']),
-                'question':str(question['question']) + " The answer is " + str(question['answer']),
+                'question':str(question['question']) + " The correct answer is " + str(question['answer']),
                 'label': label,           # the label
                 'answer':str(question['answer']),
                 'background': str(question['background']),
                 'publish_time':str(question['publish_time']),
                 'close_time':str(question['close_time']),
                 'tags':str(question['tags']),
-                'answer': str(question['answer']),
                 'choices': str(question['choices']),
             }
-    labels.add(str(question['answer']))
+    if str(question['answer']) == 'yes':
+        n_ans = 'no'
+    else:
+        n_ans = 'yes'
+    q_n_obj = {
+                'id':str(question['id']),
+                'question':str(question['question']) + " The wrong answer is " + n_ans,
+                'label': 0 if label == 1 else 1,           # the label
+                'answer':n_ans,
+                'background': str(question['background']),
+                'publish_time':str(question['publish_time']),
+                'close_time':str(question['close_time']),
+                'tags':str(question['tags']),
+                'choices': str(question['choices']),
+            }
+    
     if question['id'] in test_ids: 
         test_questions.append(q_obj)
+        test_questions.append(q_n_obj)
     else:
         train_questions.append(q_obj)
+        train_questions.append(q_n_obj)
 
 #2797
 print(f"{len(train_questions)} training questions found")
