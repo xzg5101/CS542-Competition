@@ -15,7 +15,7 @@ from transformers import (
 bool_model_path = "bool_fine_tuning"
 
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 100
+LENGTH = 200
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
 test_questions = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
