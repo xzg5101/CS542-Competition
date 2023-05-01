@@ -31,25 +31,48 @@ for question in autocast_questions:
     else:
         continue
 
+    tags = ''
+    if len(question['tags']) > 0:
+        tags = "This question is about " + ", ". join(question['tags']) + '. '
+    bg = str(question['background']).split('(http')[0].rstrip() + '. '
+
     trimmed_choices = question['choices'][0:26]
     choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(trimmed_choices)], trimmed_choices)]
+    true_ans = question['answer']
+    false_ans = []
+    for choice in letters[0:len(trimmed_choices)]:
+        if choice != true_ans:
+            false_ans.append(choice)
     q_obj = {
                 'id':str(question['id']),
-                'question':str(question['question']) + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is " + str(question['answer']) + ".",
-                'label': label,           # the label
-                'answer':str(question['answer']),
-                'background': str(question['background']),
+                'question':tags + bg + str(question['question']) + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is " + true_ans + ".",
+                # 'label': label,           # the label
+                # 'answer':str(question['answer']),
+                # 'background': str(question['background']),
                 'publish_time':str(question['publish_time']),
-                'close_time':str(question['close_time']),
-                'tags':str(question['tags']),
+                # 'close_time':str(question['close_time']),
+                # 'tags':str(question['tags']),
                 'answer': str(question['answer']),
-                'choices': str(question['choices']),
+                # 'choices': str(question['choices']),
+            }
+    q_n_obj = {
+                'id':str(question['id']),
+                'question':tags + bg + str(question['question']) + ". You have following choices: " + '; '.join(choices_prompt) + " The wrong choices are "  + ', '.join(false_ans),
+                #'label': 0 if label == 1 else 1,           # the label
+                'answer':', '.join(false_ans),
+                #'background': str(question['background']).split('(http')[0].rstrip() + '.',
+                'publish_time':str(question['publish_time']),
+                #'close_time':str(question['close_time']),
+                #'tags': "This question is about " + ", ". join(question['tags']),
+                #'choices': str(question['choices']),
             }
     labels.add(str(question['answer']))
     if question['id'] in test_ids: 
         test_questions.append(q_obj)
+        test_questions.append(q_n_obj)
     else:
         train_questions.append(q_obj)
+        train_questions.append(q_n_obj)
 
 #2797
 print(f"{len(train_questions)} training questions found")
