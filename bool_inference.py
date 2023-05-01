@@ -15,7 +15,7 @@ from transformers import (
 bool_model_path = "bool_fine_tuning2"
 
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 300
+LENGTH = 500
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
 test_questions = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
@@ -39,10 +39,13 @@ def ft_init():
     return device, tokenizer, model, length
 
 def ft_pred(device, tokenizer, model, length, question):
-    tags = "This question is about " + " ". join(question['tags']) + '. '
+    tags = ''
+    if len(question['tags']) > 0:
+        tags = "This question is about " + " ". join(question['tags']) + '. '
     bg = str(question['background']).split('(http')[0].rstrip() + '. '
 
     prompt_text = tags + bg + str(question['question']) + " The correct answer is"
+    
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
     outputs = model.generate(
@@ -67,28 +70,48 @@ def ft_pred(device, tokenizer, model, length, question):
     input_length = encoded_prompt.shape[1]
     transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     generated_tokens = outputs.sequences[:, input_length:]
-    bool_token, bool_score = generated_tokens[0][0], transition_scores[0][0]
+    first_token, first_score = generated_tokens[0][0], transition_scores[0][0]
     #print(f"| {bool_token:5d} | {tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.2%}")
 
-    print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
-    confident = np.exp(bool_score.numpy())
-
-    gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
-    gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
-
-    if gen_text[0:3] == 'yes':
+    #print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
+    confident = np.exp(first_score.numpy())
+    gen_ans = 'no'
+    meet_answer = False
+    for i, j in zip(generated_tokens[0], transition_scores[0]):
+        if tokenizer.decode(i) in ['yes', 'no', 'positive', 'negative']:
+            #print(f"|{tokenizer.decode(i):8s} | {j.numpy():.4f} | {np.exp(j.numpy()):.4f}")
+            confident = np.exp(j.numpy())
+            gen_ans = tokenizer.decode(i)
+            print(f"answer {gen_ans:8s} | {confident:.4f}")
+            meet_answer = True
+            break
+    if gen_ans in ['yes', 'positive']:
         gen_ans = 'yes'
-    elif gen_text[0:2] == 'no':
-        gen_ans = 'no'
     else:
-        print('unknown answer:', gen_text)
+        gen_ans = 'no'
+     
+    #gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
+    if not meet_answer:
+        print('unexpected answer:', text)
+    #gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
 
-    prob_ans = np.array([0.0, 1.0]) if gen_text[0:3] == 'yes' else np.array([1.0, 0.0])
+    #if gen_text[0:3] == 'yes':
+    #    gen_ans = 'yes'
+    #elif gen_text[0:2] == 'no':
+    #    gen_ans = 'no'
+    #else:
+    #    print('unknown answer:', gen_text)
+    #    if 'yes' in gen_text[0:10]:
+    #        gen_ans = 'yes'
+    #    else:
+    #        gen_ans = 'no'
 
-    pred_idx = 1 if gen_text[0:3] == 'yes' else 0
+    prob_ans = np.array([0.0, 1.0]) if gen_ans == 'yes' else np.array([1.0, 0.0])
+
+    pred_idx = 1 if gen_ans == 'yes' else 0
     pred = np.ones(2)
     pred[pred_idx] += confident
-    print(pred)
+    print( pred / pred.sum() )
     return gen_ans, pred / pred.sum()
 
 def ft_model(question):

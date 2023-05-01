@@ -38,13 +38,13 @@ for question in autocast_questions:
     q_obj = {
                 'id':str(question['id']),
                 'question':tags + bg + str(question['question']) + " The correct answer is " + str(question['answer']),
-                'label': label,           # the label
+                #'label': label,           # the label
                 'answer':str(question['answer']),
-                'background': str(question['background']).split('(http')[0].rstrip() + '.',
+                #'background': str(question['background']).split('(http')[0].rstrip() + '.',
                 'publish_time':str(question['publish_time']),
-                'close_time':str(question['close_time']),
-                'tags': "This question is about " + " ". join(question['tags']),
-                'choices': str(question['choices']),
+                #'close_time':str(question['close_time']),
+                #'tags': "This question is about " + " ". join(question['tags']),
+                #'choices': str(question['choices']),
             }
     if str(question['answer']) == 'yes':
         n_ans = 'no'
@@ -53,13 +53,13 @@ for question in autocast_questions:
     q_n_obj = {
                 'id':str(question['id']),
                 'question':tags + bg + str(question['question']) + " The wrong answer is "  + n_ans,
-                'label': 0 if label == 1 else 1,           # the label
+                #'label': 0 if label == 1 else 1,           # the label
                 'answer':n_ans,
-                'background': str(question['background']).split('(http')[0].rstrip() + '.',
+                #'background': str(question['background']).split('(http')[0].rstrip() + '.',
                 'publish_time':str(question['publish_time']),
-                'close_time':str(question['close_time']),
-                'tags': "This question is about " + ", ". join(question['tags']),
-                'choices': str(question['choices']),
+                #'close_time':str(question['close_time']),
+                #'tags': "This question is about " + ", ". join(question['tags']),
+                #'choices': str(question['choices']),
             }
     
     if question['id'] in test_ids: 
