@@ -75,7 +75,7 @@ def ft_pred(device, tokenizer, model, length, question):
 
     #print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
     #confident = 0 #np.exp(first_score.numpy())
-    gen_ans = 'no'
+    gen_ans = 'unknown'
     meet_answer = False
     for tok, score in zip(generated_tokens[0], transition_scores[0]):
         #print(f"word: {tokenizer.decode(tok):8s} | {np.exp(score.numpy()):.4f}")
