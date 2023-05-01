@@ -12,10 +12,10 @@ from transformers import (
     GPT2LMHeadModel,
     GPT2Tokenizer,
 )
-bool_model_path = "bool_fine_tuning"
+bool_model_path = "bool_fine_tuning2"
 
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 200
+LENGTH = 300
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
 test_questions = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
@@ -39,7 +39,10 @@ def ft_init():
     return device, tokenizer, model, length
 
 def ft_pred(device, tokenizer, model, length, question):
-    prompt_text = question["question"] + " The answer is"
+    tags = "This question is about " + " ". join(question['tags']) + '. '
+    bg = str(question['background']).split('(http')[0].rstrip() + '. '
+
+    prompt_text = tags + bg + str(question['question']) + " The correct answer is"
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
     outputs = model.generate(
