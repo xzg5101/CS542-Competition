@@ -38,10 +38,10 @@ for question in autocast_questions:
                 'question':str(question['question']) + " The correct answer is " + str(question['answer']),
                 'label': label,           # the label
                 'answer':str(question['answer']),
-                'background': str(question['background']),
+                'background': str(question['background']).split('(http')[0].rstrip() + '.',
                 'publish_time':str(question['publish_time']),
                 'close_time':str(question['close_time']),
-                'tags':str(question['tags']),
+                'tags': "This question is about " + " ". join(question['tags']),
                 'choices': str(question['choices']),
             }
     if str(question['answer']) == 'yes':
@@ -53,10 +53,10 @@ for question in autocast_questions:
                 'question':str(question['question']) + " The wrong answer is " + n_ans,
                 'label': 0 if label == 1 else 1,           # the label
                 'answer':n_ans,
-                'background': str(question['background']),
+                'background': str(question['background']).split('(http')[0].rstrip() + '.',
                 'publish_time':str(question['publish_time']),
                 'close_time':str(question['close_time']),
-                'tags':str(question['tags']),
+                'tags': "This question is about " + ", ". join(question['tags']),
                 'choices': str(question['choices']),
             }
     
