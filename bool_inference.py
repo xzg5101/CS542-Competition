@@ -79,7 +79,7 @@ def ft_pred(device, tokenizer, model, length, question):
     meet_answer = False
     for tok, score in zip(generated_tokens[0], transition_scores[0]):
         print(f"word: {tokenizer.decode(tok):8s} | {np.exp(score.numpy()):.4f}")
-        if tokenizer.decode(tok) in ['yes', 'no', 'positive', 'negative']:
+        if tokenizer.decode(tok).strip() in ['yes', 'no', 'positive', 'negative']:
             print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
             print(f"|{tokenizer.decode(tok):8s} | {score.numpy():.4f} | {np.exp(score.numpy()):.4f}")
             
