@@ -84,7 +84,7 @@ def ft_pred(device, tokenizer, model, length, question):
             print(f"|{tokenizer.decode(tok):8s} | {score.numpy():.4f} | {np.exp(score.numpy()):.4f}")
             
             confident = np.exp(score.numpy())
-            gen_ans = tokenizer.decode(tok)
+            gen_ans = tokenizer.decode(tok).strip()
             print(f"answer: {tokenizer.decode(tok):8s} | {np.exp(score.numpy()):.4f}")
             meet_answer = True
             break
