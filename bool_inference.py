@@ -15,7 +15,7 @@ from transformers import (
 bool_model_path = "bool_fine_tuning2"
 
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 500
+LENGTH = 600
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
 test_questions = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
@@ -74,7 +74,7 @@ def ft_pred(device, tokenizer, model, length, question):
     #print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
 
     #print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
-    #confident = 0 #np.exp(first_score.numpy())
+    confident = 0 #np.exp(first_score.numpy())
     gen_ans = 'unknown'
     meet_answer = False
     for tok, score in zip(generated_tokens[0], transition_scores[0]):
