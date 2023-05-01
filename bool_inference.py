@@ -79,6 +79,7 @@ def ft_pred(device, tokenizer, model, length, question):
     meet_answer = False
     for i, j in zip(generated_tokens[0], transition_scores[0]):
         if tokenizer.decode(i) in ['yes', 'no', 'positive', 'negative']:
+            print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
             print(f"|{tokenizer.decode(i):8s} | {j.numpy():.4f} | {np.exp(j.numpy()):.4f}")
             confident = np.exp(j.numpy())
             gen_ans = tokenizer.decode(i)
