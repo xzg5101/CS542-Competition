@@ -12,7 +12,7 @@ from transformers import (
     GPT2LMHeadModel,
     GPT2Tokenizer,
 )
-bool_model_path = "output"
+bool_model_path = "bool_fine_tuning2"
 
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
 LENGTH = 500
