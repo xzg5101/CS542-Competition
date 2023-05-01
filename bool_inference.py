@@ -70,8 +70,8 @@ def ft_pred(device, tokenizer, model, length, question):
     input_length = encoded_prompt.shape[1]
     transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     generated_tokens = outputs.sequences[:, input_length:]
-    #first_token, first_score = generated_tokens[0][0], transition_scores[0][0]
-    #print(f"| {bool_token:5d} | {tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.2%}")
+    first_token, first_score = generated_tokens[0][0], transition_scores[0][0]
+    print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
 
     #print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
     confident = 0 #np.exp(first_score.numpy())
