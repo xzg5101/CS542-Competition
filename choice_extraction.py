@@ -13,6 +13,16 @@ letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 def is_letter(string):
     return len(string) == 1 and string in letters
 
+def clean_background(bg):
+    bg = str(question['background']).split('For more information')[0]
+    bg = bg.split('; for more information')[0]
+    bg = bg.split('see:  www')[0]
+    bg = bg.split('(www')[0]
+    bg = bg.split('( http')[0]
+    bg = bg.split('(http')[0].rstrip()+ ' '
+    return bg
+
+
 # import data
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
 test_set = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
@@ -34,7 +44,8 @@ for question in autocast_questions:
     tags = ''
     if len(question['tags']) > 0:
         tags = "This question is about " + ", ". join(question['tags']) + '. '
-    bg = str(question['background']).split('(http')[0].rstrip() + '. '
+        
+    bg = clean_background(str(question['background']))
 
     trimmed_choices = question['choices'][0:26]
     choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(trimmed_choices)], trimmed_choices)]
@@ -45,7 +56,7 @@ for question in autocast_questions:
             false_ans.append(choice)
     q_obj = {
                 'id':str(question['id']),
-                'question':tags + bg + str(question['question']) + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is " + true_ans + ".",
+                'question':tags + bg + str(question['question']) + " You have following choices: " + ', '.join(choices_prompt) + ". The correct choice is " + true_ans + ".",
                 # 'label': label,           # the label
                 # 'answer':str(question['answer']),
                 # 'background': str(question['background']),
