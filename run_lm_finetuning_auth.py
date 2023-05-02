@@ -81,7 +81,7 @@ MODEL_CLASSES = {
 }
 
 # access_token = "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"
-access_token = True
+access_token = "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"
 
 
 class TextDataset(Dataset):
