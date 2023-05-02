@@ -52,20 +52,13 @@ def ft_pred(device, tokenizer, model, length, question):
     prompt_text = tags + bg + question["question"] + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is"
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
-    output_sequences = model.generate(
-        # input_ids = encoded_prompt,
-        # max_length = length,
+    outputs = model.generate(
         # temperature = 1.0,
         # top_k = 0,
         # top_p = 0.9,
         # repetition_penalty = 1.0,
-        # pad_token_id = 50256,
         input_ids = encoded_prompt,
-        max_length = len(encoded_prompt[0]) + ANS_LEN,
-        #temperature = 1.0,
-        #top_k = 0,
-        #top_p = 0.9,
-        #repetition_penalty = 1.0,
+        max_length = encoded_prompt.shape[1] + ANS_LEN,
         pad_token_id = 50256,
         #max_new_tokens=5,
         #num_beams=4,
@@ -73,30 +66,39 @@ def ft_pred(device, tokenizer, model, length, question):
         return_dict_in_generate=True,
         output_scores=True,
     )
-
-    generated_sequence = output_sequences[0].tolist()
+    output_seq = outputs.sequences
+    generated_sequence = output_seq[0].tolist()
     text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
-    #text = text[: text.find(stop_token) if args.stop_token else None]
+    
+    input_length = encoded_prompt.shape[1]
+    transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
+    generated_tokens = outputs.sequences[:, input_length:]
 
-    gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
-    # gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
-    print("---------The output is " + gen_text)
-    gen_ans = gen_text[0:1]
+    confident = 0
+    gen_ans = 'unknown'
 
-    if gen_text[0:1] in letters:
-        gen_ans = gen_text[0:1]
-    else:
-        print('---------unknown answer:', gen_text)
+    meet_answer = False
 
-    prob_ans = np.zeros([1, len(question['choices'])], dtype = np.float64)[0]
-    prob_ans[letters.find(gen_ans)] = 1.
-    print(prob_ans)
-
-    '''pred_idx = letters.find(gen_ans)
-    pred = np.ones(26)
-    pred[pred_idx] += 8'''
-
-    return gen_ans, prob_ans
+    for tok, score in zip(generated_tokens[0], transition_scores[0]):
+        if tokenizer.decode(tok).strip() in letters:
+            print(f"|{tokenizer.decode(tok):8s} | {score.numpy():.4f} | {np.exp(score.numpy()):.4f}")
+            confident = np.exp(score.numpy())
+            gen_ans = tokenizer.decode(tok).strip()
+            print(f"answer: {tokenizer.decode(tok):8s} | {confident:.4f}")
+            meet_answer = True
+            break
+    
+    if not meet_answer:
+        print('unexpected answer:', text)
+        even_ans = np.ones(len(question['choices']))
+        return even_ans / even_ans.sum()
+    
+    print('final answer is ', gen_ans)
+    pred = np.ones(len(question['choices']))
+    pred_idx = letters.find(gen_ans)
+    pred[pred_idx] += confident
+    print( pred / pred.sum() )
+    return gen_ans, pred / pred.sum()
 
 def ft_model(question):
     if question['qtype'] == 't/f':
@@ -109,23 +111,6 @@ def ft_model(question):
         return ft_prob
     elif question['qtype'] == 'num':
         return 0.5
-
-def calibrated_random_baseline_model(question):
-    if question['qtype'] == 't/f':
-        pred_idx = np.argmax(np.random.random(size=2))
-        pred = np.ones(2)
-        pred[pred_idx] += 1e-5
-        return pred / pred.sum()
-    elif question['qtype'] == 'mc':
-        pred_idx = np.argmax(np.random.random(size=len(question['choices'])))
-        pred = np.ones(len(question['choices']))
-        pred[pred_idx] += 1e-5
-        return pred / pred.sum()
-    elif question['qtype'] == 'num':
-        return 0.5
-
-def brier_score(probabilities, answer_probabilities):
-    return ((probabilities - answer_probabilities) ** 2).sum() / 2
 
 
 device, tokenizer, model, length = ft_init()

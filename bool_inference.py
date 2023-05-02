@@ -52,7 +52,7 @@ def ft_pred(device, tokenizer, model, length, question):
     encoded_prompt = encoded_prompt.to(device)
     outputs = model.generate(
         input_ids = encoded_prompt,
-        max_length = len(encoded_prompt[0]) + ANS_LEN,
+        max_length = encoded_prompt.shape[1] + ANS_LEN,
         #temperature = 1.0,
         #top_k = 0,
         #top_p = 0.9,
@@ -72,22 +72,18 @@ def ft_pred(device, tokenizer, model, length, question):
     input_length = encoded_prompt.shape[1]
     transition_scores = model.compute_transition_scores(outputs.sequences, outputs.scores, normalize_logits=True)
     generated_tokens = outputs.sequences[:, input_length:]
-    #first_token, first_score = generated_tokens[0][0], transition_scores[0][0]
-    #print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
 
-    #print(f"|{tokenizer.decode(bool_token):8s} | {bool_score.numpy():.4f} | {np.exp(bool_score.numpy()):.4f}")
-    confident = 0 #np.exp(first_score.numpy())
+    confident = 0
     gen_ans = 'unknown'
     meet_answer = False
     for tok, score in zip(generated_tokens[0], transition_scores[0]):
-        #print(f"word: {tokenizer.decode(tok):8s} | {np.exp(score.numpy()):.4f}")
         if tokenizer.decode(tok).strip() in ['yes', 'no', 'positive', 'negative']:
             #print(f"first token | {first_token:5d} | {tokenizer.decode(first_token):8s} | {first_score.numpy():.4f} | {np.exp(first_score.numpy()):.2%}")
             print(f"|{tokenizer.decode(tok):8s} | {score.numpy():.4f} | {np.exp(score.numpy()):.4f}")
             
             confident = np.exp(score.numpy())
             gen_ans = tokenizer.decode(tok).strip()
-            print(f"answer: {tokenizer.decode(tok):8s} | {np.exp(score.numpy()):.4f}")
+            print(f"answer: {tokenizer.decode(tok):8s} | {confident:.4f}")
             meet_answer = True
             break
     if gen_ans in ['yes', 'positive']:
@@ -98,41 +94,10 @@ def ft_pred(device, tokenizer, model, length, question):
     #gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     if not meet_answer:
         print('unexpected answer:', text)
-        y_pos = float('inf')
-        n_pos = float('inf')
-        if 'yes' in text:
-            y_pos = text.find('yes')
-        
-        if 'positive' in text and text.find('positive') < y_pos:
-            y_pos = text.find('positive')
-        
-        if 'no' in text:
-            n_pos = text.find('no')
-        
-        if 'negative' in text and text.find('negative') < n_pos:
-            n_pos = text.find('negative')
-        
-        if y_pos == float('inf') and n_pos == float('inf'):
-            return np.array([0.5, 0.5])
-
-        elif y_pos < n_pos:
-            gen_ans = 'yes'
-        else:
-            gen_ans = 'no'
+        return np.array([0.5, 0.5])
 
 
-    #gen_ans = 'yes' if gen_text[0:3] == 'yes' else 'no'
 
-    #if gen_text[0:3] == 'yes':
-    #    gen_ans = 'yes'
-    #elif gen_text[0:2] == 'no':
-    #    gen_ans = 'no'
-    #else:
-    #    print('unknown answer:', gen_text)
-    #    if 'yes' in gen_text[0:10]:
-    #        gen_ans = 'yes'
-    #    else:
-    #        gen_ans = 'no'
     print('final answer is ', gen_ans)
     pred_idx = 1 if gen_ans == 'yes' else 0
     pred = np.ones(2)
