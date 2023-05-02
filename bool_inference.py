@@ -50,7 +50,6 @@ def ft_pred(device, tokenizer, model, length, question):
     
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
-    print("encoded input type is", type(encoded_prompt[0]), " length is ", len(encoded_prompt[0]))
     outputs = model.generate(
         input_ids = encoded_prompt,
         max_length = len(encoded_prompt[0]) + ANS_LEN,
