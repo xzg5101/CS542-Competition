@@ -94,8 +94,7 @@ def ft_pred(device, tokenizer, model, length, question):
     #gen_text = text.replace(prompt_text, '').strip().replace('\n', '')
     if not meet_answer:
         print('unexpected answer:', text)
-        return np.array([0.5, 0.5])
-
+        return 'unknow', np.array([0.5, 0.5])
 
 
     print('final answer is ', gen_ans)
