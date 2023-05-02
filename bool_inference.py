@@ -11,13 +11,12 @@ import numpy as np
 from transformers import (
     GPT2LMHeadModel,
     GPT2Tokenizer,
-    BertTokenizer,
 )
 
 from utils import clean_background
 from utils import MAX_LENGTH, LENGTH, ANS_LEN
 
-bool_model_path = "bool_fine_tuning_bert/checkpoint-450"
+bool_model_path = "bool_fine_tuning_bert"
 
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
@@ -35,7 +34,7 @@ def adjust_length_to_model(length, max_sequence_length):
 
 def ft_init():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tokenizer = BertTokenizer.from_pretrained(bool_model_path)
+    tokenizer = GPT2Tokenizer.from_pretrained(bool_model_path)
     model = GPT2LMHeadModel.from_pretrained(bool_model_path)
     model.to(device)
     length = adjust_length_to_model(LENGTH, max_sequence_length=model.config.max_position_embeddings)
