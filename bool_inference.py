@@ -16,7 +16,7 @@ from transformers import (
 from utils import clean_background
 from utils import MAX_LENGTH, LENGTH, ANS_LEN
 
-bool_model_path = "bool_fine_tuning4/checkpoint-500"
+bool_model_path = "bool_fine_tuning3"
 
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
