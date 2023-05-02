@@ -66,7 +66,6 @@ for question in autocast_questions:
     
     if question['id'] in test_ids: 
         test_questions.append(q_obj)
-        test_questions.append(q_n_obj)
     else:
         train_questions.append(q_obj)
         train_questions.append(q_n_obj)
