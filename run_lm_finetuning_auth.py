@@ -80,7 +80,8 @@ MODEL_CLASSES = {
     "camembert": (CamembertConfig, CamembertForMaskedLM, CamembertTokenizer),
 }
 
-access_token = "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"
+# access_token = "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"
+access_token = True
 
 
 class TextDataset(Dataset):
