@@ -11,6 +11,7 @@ import numpy as np
 from transformers import (
     GPT2LMHeadModel,
     GPT2Tokenizer,
+    BertTokenizer,
 )
 
 from utils import clean_background
@@ -34,7 +35,7 @@ def adjust_length_to_model(length, max_sequence_length):
 
 def ft_init():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tokenizer = GPT2Tokenizer.from_pretrained(bool_model_path)
+    tokenizer = BertTokenizer.from_pretrained(bool_model_path)
     model = GPT2LMHeadModel.from_pretrained(bool_model_path)
     model.to(device)
     length = adjust_length_to_model(LENGTH, max_sequence_length=model.config.max_position_embeddings)
