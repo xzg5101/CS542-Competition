@@ -46,8 +46,8 @@ def ft_pred(device, tokenizer, model, length, question):
         tags = "This question is about " + ", ". join(question['tags']) + '. '
     bg = clean_background(str(question['background']))
 
-    prompt_text = tags + bg + str(question['question']) + " The correct answer is"
-    
+    #prompt_text = tags + bg + str(question['question']) + " The correct answer is"
+    prompt_text = str(question['question']) + " The correct answer is"
     encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
     encoded_prompt = encoded_prompt.to(device)
     outputs = model.generate(
