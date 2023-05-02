@@ -1,5 +1,5 @@
 import json
-
+from utils import clean_background
 
 def is_float(string):
     try:
@@ -13,15 +13,6 @@ bool_labels = ['no', 'yes']
 
 def is_letter(string):
     return len(string) == 1 and string in letters
-
-def clean_background(bg):
-    bg = str(question['background']).split('For more information')[0]
-    bg = bg.split('; for more information')[0]
-    bg = bg.split('see:  www')[0]
-    bg = bg.split('(www')[0]
-    bg = bg.split('( http')[0]
-    bg = bg.split('(http')[0].rstrip()+ ' '
-    return bg
 
 # import data
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset

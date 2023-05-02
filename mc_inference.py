@@ -13,9 +13,11 @@ from transformers import (
     GPT2Tokenizer,
 )
 
+from utils import clean_background
+from utils import MAX_LENGTH, LENGTH, ANS_LEN
+
 mc_model_path = 'choice_fine_tuning'
-MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 200
+
 
 letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
@@ -44,7 +46,7 @@ def ft_pred(device, tokenizer, model, length, question):
     tags = ''
     if len(question['tags']) > 0:
         tags = "This question is about " + ", ". join(question['tags']) + '. '
-    bg = str(question['background']).split('(http')[0].rstrip() + '. '
+    bg = clean_background(str(question['background']))
     trimmed_choices = question['choices'][0:26]
     choices_prompt = [i + ":" + str(j) for i, j in zip(letters[0:len(trimmed_choices)], trimmed_choices)]
     prompt_text = tags + bg + question["question"] + ". You have following choices: " + '; '.join(choices_prompt) + ". The correct choice is"
@@ -59,7 +61,7 @@ def ft_pred(device, tokenizer, model, length, question):
         # repetition_penalty = 1.0,
         # pad_token_id = 50256,
         input_ids = encoded_prompt,
-        max_length = length,
+        max_length = len(encoded_prompt[0]) + ANS_LEN,
         #temperature = 1.0,
         #top_k = 0,
         #top_p = 0.9,

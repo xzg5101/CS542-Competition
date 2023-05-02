@@ -12,11 +12,11 @@ from transformers import (
     GPT2LMHeadModel,
     GPT2Tokenizer,
 )
-bool_model_path = "bool_fine_tuning2"
 
-MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
-LENGTH = 600
-ANS_LEN = 5
+from utils import clean_background
+from utils import MAX_LENGTH, LENGTH, ANS_LEN
+
+bool_model_path = "bool_fine_tuning2"
 
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
@@ -44,7 +44,7 @@ def ft_pred(device, tokenizer, model, length, question):
     tags = ''
     if len(question['tags']) > 0:
         tags = "This question is about " + ", ". join(question['tags']) + '. '
-    bg = str(question['background']).split('(http')[0].rstrip() + '. '
+    bg = clean_background(str(question['background']))
 
     prompt_text = tags + bg + str(question['question']) + " The correct answer is"
     
