@@ -68,7 +68,7 @@ for question in autocast_questions:
         test_questions.append(q_obj)
     else:
         train_questions.append(q_obj)
-        train_questions.append(q_n_obj)
+        #train_questions.append(q_n_obj)
 
 #2797
 print(f"{len(train_questions)} training questions found")
