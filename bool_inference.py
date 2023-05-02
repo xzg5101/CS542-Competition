@@ -16,7 +16,7 @@ bool_model_path = "bool_fine_tuning2"
 
 MAX_LENGTH = int(10000)  # Hardcoded max length to avoid infinite loop
 LENGTH = 600
-ANS_LENG = 5
+ANS_LEN = 5
 
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
@@ -53,7 +53,7 @@ def ft_pred(device, tokenizer, model, length, question):
     print("encoded input type is", type(encoded_prompt[0]), " length is ", len(encoded_prompt[0]))
     outputs = model.generate(
         input_ids = encoded_prompt,
-        max_length = length,
+        max_length = len(encoded_prompt[0]) + ANS_LEN,
         #temperature = 1.0,
         #top_k = 0,
         #top_p = 0.9,
