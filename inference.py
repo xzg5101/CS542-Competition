@@ -85,7 +85,7 @@ def ft_pred_bool(device, tokenizer, model, question):
         print('unexpected answer:', text)
         return np.array([0.5, 0.5])
     print('final answer is ', gen_ans)
-    pred_idx = 1 if gen_ans == 'yes' else 0
+    pred_idx = 0 if gen_ans == 'yes' else 1
     pred = np.ones(2)
     pred[pred_idx] += confident/2
     print( pred / pred.sum() )
@@ -141,7 +141,7 @@ def ft_pred_mc(device, tokenizer, model, question):
     print('final answer is ', gen_ans)
     pred = np.ones(len(question['choices']))
     pred_idx = letters.find(gen_ans)
-    pred[pred_idx] += confident
+    pred[pred_idx] += confident/2
     #print( pred / pred.sum() )
     return pred / pred.sum()
 
