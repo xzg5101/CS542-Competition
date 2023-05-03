@@ -142,7 +142,7 @@ def ft_pred_mc(device, tokenizer, model, question):
     pred = np.ones(len(question['choices']))
     pred_idx = letters.find(gen_ans)
     pred[pred_idx] += confident
-    print( pred / pred.sum() )
+    #print( pred / pred.sum() )
     return pred / pred.sum()
 
 def ft_model(question):
