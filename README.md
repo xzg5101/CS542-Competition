@@ -43,6 +43,7 @@ python run_lm_finetuning_auth.py \
 ```
 To finetune a model with T/F questions, move to the repository directory, run:
 
+```
 python run_lm_finetuning_auth.py \
     --output_dir=choice_fine_tuning \
     --model_type=gpt2 \
