@@ -60,7 +60,7 @@ To make predictions use the two models above:
 
 ```
 python inference.py
-'''
+```
 By excecuting the `inference.py`, the prediction will be put in `submission` direction. Pack the output predictions.pkl in `submission.zip`, then put it in the same directory with the provided `evaluation.ipynb`, click "run all" or execute all code blocks in the notebook, the output will be:
 
 ```
