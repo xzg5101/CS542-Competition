@@ -15,7 +15,7 @@ Before every execution:
 conda activate cs542
 ```
 
-To download data in project directory (less than 150GB in total, install gdown before download):
+To download data in project directory (less than 200MB in total, install gdown before download):
 
 ```
 gdown 16TI8uVk3No1HCx765PrSWLDMmnnqmqec
