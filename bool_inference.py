@@ -16,7 +16,7 @@ from transformers import (
 from utils import clean_background
 from utils import MAX_LENGTH, LENGTH, ANS_LEN
 
-bool_model_path = "bool_fine_tuning_bert"
+bool_model_path = "bool_fine_tuning4"
 
 
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
@@ -116,22 +116,6 @@ def ft_model(question):
     elif question['qtype'] == 'num':
         return 0.5
 
-def calibrated_random_baseline_model(question):
-    if question['qtype'] == 't/f':
-        pred_idx = np.argmax(np.random.random(size=2))
-        pred = np.ones(2)
-        pred[pred_idx] += 1e-5
-        return pred / pred.sum()
-    elif question['qtype'] == 'mc':
-        pred_idx = np.argmax(np.random.random(size=len(question['choices'])))
-        pred = np.ones(len(question['choices']))
-        pred[pred_idx] += 1e-5
-        return pred / pred.sum()
-    elif question['qtype'] == 'num':
-        return 0.5
-
-def brier_score(probabilities, answer_probabilities):
-    return ((probabilities - answer_probabilities) ** 2).sum() / 2
 
 
 device, tokenizer, model, length = ft_init()
