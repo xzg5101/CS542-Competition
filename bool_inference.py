@@ -101,7 +101,7 @@ def ft_pred(device, tokenizer, model, length, question):
     #pred_idx = 1 if gen_ans == 'yes' else 0
     pred_idx = 0 if gen_ans == 'yes' else 1
     pred = np.ones(2)
-    pred[pred_idx] += confident
+    pred[pred_idx] += confident/2
     print( pred / pred.sum() )
     return gen_ans, pred / pred.sum()
 
