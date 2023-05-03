@@ -16,7 +16,7 @@ from transformers import (
 from utils import clean_background
 from utils import MAX_LENGTH, LENGTH, ANS_LEN
 
-bool_model_path = "bool_fine_tuning2"
+bool_model_path = "bool_fine_tuning4/checkpoint-750"
 mc_model_path = 'choice_fine_tuning'
 letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')) # from the Autocast dataset
@@ -87,7 +87,7 @@ def ft_pred_bool(device, tokenizer, model, question):
     print('final answer is ', gen_ans)
     pred_idx = 1 if gen_ans == 'yes' else 0
     pred = np.ones(2)
-    pred[pred_idx] += confident
+    pred[pred_idx] += confident/2
     print( pred / pred.sum() )
     return  pred / pred.sum()
 
