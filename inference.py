@@ -23,14 +23,6 @@ autocast_questions = json.load(open('autocast_questions.json', encoding='utf-8')
 test_questions = json.load(open('autocast_competition_test_set.json', encoding='utf-8'))
 test_ids = [q['id'] for q in test_questions]
 
-def adjust_length_to_model(length, max_sequence_length):
-    if length < 0 and max_sequence_length > 0:
-        length = max_sequence_length
-    elif 0 < max_sequence_length < length:
-        length = max_sequence_length  # No generation bigger than model size
-    elif length < 0:
-        length = MAX_LENGTH  # avoid infinite loop
-    return length
 
 def ft_init():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
