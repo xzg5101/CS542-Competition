@@ -150,7 +150,7 @@ def ft_model(question):
         ft_prob = ft_pred_bool(device, bool_tokenizer, bool_model, question)
         return ft_prob
     elif question['qtype'] == 'mc':
-        ft_prob = ft_pred_mc(device, bool_tokenizer, bool_model, question)
+        ft_prob = ft_pred_mc(device, mc_tokenizer, mc_model, question)
         return ft_prob
     elif question['qtype'] == 'num':
         return 0.5
